@@ -1,0 +1,41 @@
+.menuList {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menuItem {
+  margin-bottom: 16px;
+}
+
+.menuLink {
+  text-decoration: none;
+  color: white;
+  font-size: 16px;
+  display: block;
+  padding: 8px 16px;
+  transition: background-color 0.3s ease;
+}
+
+.menuLink:hover {
+  background-color: #444;
+  color: #ddd;
+}
+
+@media (max-width: 640px) {
+  .menuList {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .menuItem {
+    margin-bottom: 0;
+  }
+
+  .menuLink {
+    border: 1px solid #5a5a5a;
+    border-radius: 999px;
+    padding: 8px 12px;
+  }
+}

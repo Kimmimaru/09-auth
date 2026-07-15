@@ -1,0 +1,17 @@
+.input {
+  flex: 1;
+  max-width: 240px;
+  min-width: 220px;
+  padding: 6px 12px;
+  font-size: 16px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
+
+@media (max-width: 900px) {
+  .input {
+    max-width: none;
+    width: 100%;
+    min-width: 0;
+  }
+}

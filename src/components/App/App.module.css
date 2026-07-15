@@ -1,0 +1,62 @@
+.app {
+  width: 90%;
+  max-width: 1280px;
+  margin: 0px auto;
+  padding: 0 16px 16px;
+}
+
+.toolbar {
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.button {
+  padding: 6px 12px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #0d6efd;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.button:hover {
+  background-color: #0b5ed7;
+}
+
+@media (max-width: 900px) {
+  .app {
+    width: 100%;
+    padding: 0 12px 12px;
+  }
+
+  .toolbar {
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .app {
+    padding: 0 10px 10px;
+  }
+
+  .toolbar {
+    padding: 12px 0;
+  }
+
+  .button {
+    font-size: 15px;
+  }
+}
