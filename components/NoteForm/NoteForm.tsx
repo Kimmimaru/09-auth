@@ -3,7 +3,7 @@
 import type { ChangeEvent } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { createNote, type CreateNoteParams } from "@/lib/api";
+import { createNote, type CreateNoteParams } from "@/lib/api/clientApi";
 import { type NoteTag } from "@/types/note";
 import { useNoteStore } from "@/lib/store/noteStore";
 import css from "./NoteForm.module.css";
@@ -24,7 +24,9 @@ export default function NoteForm() {
   });
 
   const updateDraftFromForm = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+    event: ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
   ): void => {
     const form = event.currentTarget.form;
 
