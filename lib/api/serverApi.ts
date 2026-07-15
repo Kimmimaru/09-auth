@@ -15,7 +15,7 @@ export interface FetchNotesResponse {
   totalPages: number;
 }
 
-interface CheckSessionResponse {
+export interface CheckSessionResponse {
   success: boolean;
 }
 
@@ -58,13 +58,15 @@ export const fetchNoteById = async (
   return response.data;
 };
 
-export const checkSession = async (cookieHeader: string): Promise<boolean> => {
+export const checkSession = async (
+  cookieHeader: string,
+): Promise<AxiosResponse<CheckSessionResponse>> => {
   const response: AxiosResponse<CheckSessionResponse> = await notehubApi.get(
     "/auth/session",
     withCookieHeader(cookieHeader),
   );
 
-  return response.data.success;
+  return response;
 };
 
 export const getMe = async (cookieHeader: string): Promise<User> => {

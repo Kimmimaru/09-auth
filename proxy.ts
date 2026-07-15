@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { parseSetCookie } from "cookie";
 import { checkSession } from "@/lib/api/serverApi";
 
 const privateRoutes = ["/notes", "/profile"];
@@ -8,6 +9,27 @@ const isMatchedRoute = (pathname: string, routes: string[]) => {
   return routes.some(
     (route) => pathname === route || pathname.startsWith(`${route}/`),
   );
+};
+
+const applySetCookie = (
+  response: NextResponse,
+  setCookieHeader: string | string[] | undefined,
+) => {
+  if (!setCookieHeader) {
+    return;
+  }
+
+  const cookieArray = Array.isArray(setCookieHeader)
+    ? setCookieHeader
+    : [setCookieHeader];
+
+  for (const cookieStr of cookieArray) {
+    const parsedCookie = parseSetCookie(cookieStr);
+
+    if (parsedCookie.value) {
+      response.cookies.set(parsedCookie.name, parsedCookie.value, parsedCookie);
+    }
+  }
 };
 
 export async function proxy(req: NextRequest) {
@@ -20,18 +42,35 @@ export async function proxy(req: NextRequest) {
     return NextResponse.next();
   }
 
+  const accessToken = req.cookies.get("accessToken")?.value;
+  const refreshToken = req.cookies.get("refreshToken")?.value;
+
+  let isAuthenticated = Boolean(accessToken);
+  let setCookieHeader: string | string[] | undefined;
+
   const cookieHeader = req.headers.get("cookie") ?? "";
-  const isAuthenticated = await checkSession(cookieHeader);
+
+  if (!accessToken && refreshToken) {
+    const sessionResponse = await checkSession(cookieHeader);
+    isAuthenticated = sessionResponse.data.success;
+    setCookieHeader = sessionResponse.headers["set-cookie"];
+  }
 
   if (isPrivateRoute && !isAuthenticated) {
-    return NextResponse.redirect(new URL("/sign-in", req.url));
+    const response = NextResponse.redirect(new URL("/sign-in", req.url));
+    applySetCookie(response, setCookieHeader);
+    return response;
   }
 
   if (isPublicRoute && isAuthenticated) {
-    return NextResponse.redirect(new URL("/profile", req.url));
+    const response = NextResponse.redirect(new URL("/", req.url));
+    applySetCookie(response, setCookieHeader);
+    return response;
   }
 
-  return NextResponse.next();
+  const response = NextResponse.next();
+  applySetCookie(response, setCookieHeader);
+  return response;
 }
 
 export const config = {
